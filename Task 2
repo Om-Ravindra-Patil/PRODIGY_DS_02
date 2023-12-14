@@ -1,0 +1,96 @@
+import csv
+import pandas as pd
+import statistics as stat
+from scipy.stats import norm
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+data=pd.read_csv('titanic1.csv')
+
+data.head()
+
+data.tail(10)
+
+data.shape
+
+print("Number of rows",data.shape[0])
+print("Number of Columns",data.shape[1])
+
+data.info()
+
+print("Any missing Value? ", data.isnull().values.any())
+data.isnull().sum()
+
+sns.heatmap(data.isnull())
+
+per=data.isnull().sum()*100/len(data)
+
+print(per)
+
+data.dropna(axis=0)
+
+data.dropna(inplace=True)
+
+data.isnull().sum()
+
+sns.heatmap(data.isnull())
+
+data.head()
+dup=data.duplicated().any()
+print(dup)
+
+data.describe()
+data.describe(include='all')
+
+data.columns
+data.groupby('Age')['Fare'].mean()
+data.groupby('Age')['Fare'].mean().sort_values(ascending=False)
+
+sns.barplot(x='Age', y='Fare',data=data.head(10))
+plt.title("Fare By Ages")
+plt.xticks(rotation=90)
+plt.show()
+
+data.groupby('Pclass')['Fare'].mean().sort_values(ascending=False)
+
+sns.barplot(x='Pclass',y='Fare',data=data)
+plt.title("Fare by Class")
+plt.show
+
+data.hist()
+
+age=data['Age']
+fare=data['Fare']
+pc=data['Pclass']
+
+plt.hist(age)
+
+plt.hist(fare)
+
+plt.hist(pc)
+
+age_mean=stat.mean(age)
+fare_mean=stat.mean(fare)
+class_mean=stat.mean(pc)
+
+age_st=stat.stdev(age)
+fare_st=stat.stdev(fare)
+class_st=stat.stdev(pc)
+
+plt.plot(pc,norm.pdf(pc,class_mean,class_st))
+
+plt.plot(age,norm.pdf(age,age_mean,age_st))
+
+plt.plot(fare,norm.pdf(fare,fare_mean,fare_st))
+
+data_cor=data.corr()
+print(data_cor)
+
+plt.hist(data_cor)
+
+data_cor.hist()
+
+sns.scatterplot(x='Age',y='Fare',data=data,hue="Pclass")
+
+sns.heatmap(data_cor)
